@@ -42,14 +42,14 @@
     <item name="dsp.audio">10.8</item>
     <item name="dsp.video">39.6</item>
     <item name="radio.talk">96.12</item>
-    <item name="radio.active">191.16</item>
+    <item name="radio.active">133</item>
     <item name="gps.on">50.4</item>
-    <item name="radio.scanning">82.8</item>
+    <item name="radio.scanning">67</item>
     <item name="camera.flashlight">1000</item>
     <item name="camera.avg">1400</item>
     <array name="radio.on">
-        <value>2.88</value>
-        <value>2.88</value>
+        <value>3</value>
+        <value>2</value>
     </array>
     <array name="cpu.clusters.cores">
         <value>2</value>

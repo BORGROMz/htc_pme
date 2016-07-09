@@ -92,6 +92,15 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/amplifier/tfa9888_enable.asq:system/etc/tfa9888_enable.asq \
     $(LOCAL_PATH)/amplifier/tfa9888_disable.asq:system/etc/tfa9888_disable.asq
 
+# ANT+
+PRODUCT_PACKAGES += \
+    AntHalService \
+    com.dsi.ant.antradio_library \
+    libantradio
+
+PRODUCT_COPY_FILES += \
+    external/ant-wireless/antradio-library/com.dsi.ant.antradio_library.xml:system/etc/permissions/com.dsi.ant.antradio_library.xml
+
 # Browser
 PRODUCT_PACKAGES += \
     Gello
@@ -100,6 +109,12 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     libxml2 \
     Snap
+
+# Connectivity Engine support (CNE)
+PRODUCT_PACKAGES += \
+    cneapiclient \
+    com.quicinc.cne \
+    services-ext
 
 # Display
 PRODUCT_PACKAGES += \
@@ -148,6 +163,11 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     IPACM_cfg.xml \
     ipacm
+
+# IPv6
+PRODUCT_PACKAGES += \
+    ebtables \
+    ethertypes
 
 # IRQ
 PRODUCT_COPY_FILES += \
@@ -218,8 +238,8 @@ PRODUCT_PACKAGES += \
 
 # RIL
 PRODUCT_PACKAGES += \
-    libcnefeatureconfig \
-    librmnetctl
+    librmnetctl \
+    libxml2
 
 # Thermal
 PRODUCT_COPY_FILES += \
