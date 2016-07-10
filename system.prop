@@ -130,7 +130,6 @@ ro.ril.telephony.mqanelements=5
 ro.telephony.call_ring.multiple=false
 ril.subscription.types=NV,RUIM
 DEVICE_PROVISIONED=1
-persist.radio.multisim.config=dsds
 persist.volte_enalbed_by_hw=1
 persist.radio.data_ltd_sys_ind=1
 persist.radio.rat_on=combine
