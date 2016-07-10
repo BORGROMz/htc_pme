@@ -91,6 +91,7 @@ on post-fs-data
 
     # Create directory for CNE
     mkdir /data/connectivity 0771 system system
+    chown system system /data/connectivity
 
     # Create directory for DASH client
     mkdir /data/misc/dash 0770 media audio
@@ -101,7 +102,10 @@ on post-fs-data
 
     # Create directory for DPM
     mkdir /data/dpm 0771 system system
+    chown system system /data/dpm
+
     mkdir /data/dpm/nsrm 0771 system system
+    chown system system /data/dpm/nsrm
 
     # Create directory for fingerprint
     mkdir /data/fpc 0770 system system

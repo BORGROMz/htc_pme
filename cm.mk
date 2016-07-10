@@ -12,7 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Inherit from those products. Most specific first.
+$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
+
 $(call inherit-product, device/htc/pme/full_pme.mk)
+
+# Inherit some common CM stuff.
 $(call inherit-product, vendor/cm/config/common_full_phone.mk)
 
 # Enhanced NFC
@@ -25,3 +31,7 @@ PRODUCT_BRAND := HTC
 PRODUCT_MODEL := HTC 10
 PRODUCT_MANUFACTURER := HTC
 PRODUCT_RELEASE_NAME := pme
+
+PRODUCT_BUILD_PROP_OVERRIDES += \
+    BUILD_FINGERPRINT=htc/pmewhl_00651/htc_pmewhl:6.0.1/MMB29M/744051.3:user/release-keys \
+    PRIVATE_BUILD_DESC="1.24.651.3 8.0_g CL744051 release-keys"

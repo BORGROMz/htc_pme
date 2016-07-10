@@ -84,7 +84,12 @@ USE_DEVICE_SPECIFIC_CAMERA := true
 # QCOM hardware
 BOARD_USES_QCOM_HARDWARE := true
 
-BOARD_HARDWARE_CLASS += $(DEVICE_PATH)/cmhw 
+# CM Hardware
+BOARD_HARDWARE_CLASS += $(DEVICE_PATH)/cmhw
+
+# CNE and DPM
+TARGET_LDPRELOAD := libNimsWrap.so
+BOARD_USES_QCNE := true 
 
 # Display
 NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
@@ -99,6 +104,15 @@ MAX_EGL_CACHE_SIZE := 2048*1024
 
 HAVE_ADRENO_SOURCE:= false
 OVERRIDE_RS_DRIVER:= libRSDriver_adreno.so
+
+# Enable dexpreopt to speed boot time
+ifeq ($(HOST_OS),linux)
+  ifeq ($(call match-word-in-list,$(TARGET_BUILD_VARIANT),user),true)
+    ifeq ($(WITH_DEXPREOPT),)
+      WITH_DEXPREOPT := true
+    endif
+  endif
+endif
 
 # Encryption
 TARGET_HW_DISK_ENCRYPTION := true
@@ -142,7 +156,6 @@ TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/rootdir/fstab.qcom
 
 # RIL
 TARGET_RIL_VARIANT := caf
-BOARD_PROVIDES_LIBRIL := true
 
 # SELinux
 include device/qcom/sepolicy/sepolicy.mk

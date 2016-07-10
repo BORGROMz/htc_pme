@@ -27,8 +27,8 @@ PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := xxxhdpi
 
 # Boot animation
-TARGET_SCREEN_HEIGHT := 2560
-TARGET_SCREEN_WIDTH := 1440
+TARGET_SCREEN_HEIGHT := 1920
+TARGET_SCREEN_WIDTH := 1080
 
 $(call inherit-product, frameworks/native/build/phone-xxxhdpi-4096-dalvik-heap.mk)
 $(call inherit-product-if-exists, frameworks/native/build/phone-xxxhdpi-4096-hwui-memory.mk)
@@ -91,15 +91,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/amplifier/tfa9888_init.asq:system/etc/tfa9888_init.asq \
     $(LOCAL_PATH)/amplifier/tfa9888_enable.asq:system/etc/tfa9888_enable.asq \
     $(LOCAL_PATH)/amplifier/tfa9888_disable.asq:system/etc/tfa9888_disable.asq
-
-# ANT+
-PRODUCT_PACKAGES += \
-    AntHalService \
-    com.dsi.ant.antradio_library \
-    libantradio
-
-PRODUCT_COPY_FILES += \
-    external/ant-wireless/antradio-library/com.dsi.ant.antradio_library.xml:system/etc/permissions/com.dsi.ant.antradio_library.xml
 
 # Browser
 PRODUCT_PACKAGES += \
