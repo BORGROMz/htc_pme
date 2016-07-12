@@ -55,6 +55,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define IPA_NUM_ODU_ROUTE_RULES 2
 #define MAX_WAN_UL_FILTER_RULES MAX_NUM_EXT_PROPS
 #define NUM_IPV4_ICMP_FLT_RULE 1
+#define NUM_IPV6_PREFIX_FLT_RULE 1
 #define NUM_IPV6_ICMP_FLT_RULE 1
 
 /* ndc bandwidth ipatetherstats <ifaceIn> <ifaceOut> */
@@ -184,8 +185,6 @@ public:
 
 	int handle_addr_evt_odu_bridge(ipacm_event_data_addr* data);
 
-	int handle_del_ipv6_addr(ipacm_event_data_all *data);
-
 	static bool odu_up;
 
 	/* install UL filter rule from Q6 */
@@ -305,9 +304,7 @@ protected:
 	/*handle lan2lan client active*/
 	int handle_lan2lan_client_active(ipacm_event_data_all *data, ipa_cm_event_id event);
 
-	virtual int install_ipv6_prefix_flt_rule(uint32_t* prefix);
-
-	virtual void delete_ipv6_prefix_flt_rule();
+	int install_ipv6_prefix_flt_rule(uint32_t* prefix);
 
 	int install_ipv6_icmp_flt_rule();
 
@@ -315,9 +312,6 @@ protected:
 
 	/* handle tethering stats */
 	int handle_tethering_stats_event(ipa_get_data_stats_resp_msg_v01 *data);
-
-	/* handle tethering client */
-	int handle_tethering_client(bool reset, ipacm_client_enum ipa_client);
 
 	lan2lan_flt_rule_hdl lan2lan_flt_rule_hdl_v4[MAX_OFFLOAD_PAIR];
 	lan2lan_flt_rule_hdl lan2lan_flt_rule_hdl_v6[MAX_OFFLOAD_PAIR];
@@ -347,8 +341,6 @@ protected:
 	int num_wan_ul_fl_rule_v6;
 
 	bool is_active;
-	bool modem_ul_v4_set;
-	bool modem_ul_v6_set;
 
 	uint32_t if_ipv4_subnet;
 

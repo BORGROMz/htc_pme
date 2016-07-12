@@ -33,5 +33,7 @@ PRODUCT_MANUFACTURER := HTC
 PRODUCT_RELEASE_NAME := pme
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
-    BUILD_FINGERPRINT=htc/pmewhl_00651/htc_pmewhl:6.0.1/MMB29M/744051.3:user/release-keys \
+    PRODUCT_DEVICE="htc_pmewl" \
+    PRODUCT_NAME="pmewl_00531" \
+    BUILD_FINGERPRINT="htc/pmewhl_00651/htc_pmewhl:6.0.1/MMB29M/744051.3:user/release-keys" \
     PRIVATE_BUILD_DESC="1.24.651.3 8.0_g CL744051 release-keys"
