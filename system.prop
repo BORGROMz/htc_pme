@@ -75,9 +75,9 @@ ro.ril.telephony.mqanelements=5
 ro.telephony.call_ring.multiple=false
 ro.ril.oem.ecclist=911
 ro.ril.oem.nosim.ecclist=911
-ro.telephony.default_network=10
+ro.telephony.default_network=9
 telephony.lteOnGsmDevice=1
-ro.ril.def.preffered.network=10
+ro.ril.def.preffered.network=9
 
 #T-Mobile
 ro.product.model=HTC 10
@@ -106,5 +106,6 @@ wifi.hs20.support=true
 
 # Timeservice
 persist.timed.enable=true
+
 # Wifi
 wifi.interface=wlan0

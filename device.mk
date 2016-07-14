@@ -229,8 +229,8 @@ PRODUCT_PACKAGES += \
 
 # RIL
 PRODUCT_PACKAGES += \
-    librmnetctl \
-    libxml2
+    libcnefeatureconfig \
+    librmnetctl
 
 # Thermal
 PRODUCT_COPY_FILES += \

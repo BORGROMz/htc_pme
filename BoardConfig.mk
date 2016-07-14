@@ -81,16 +81,11 @@ BOARD_BLUEDROID_VENDOR_CONF := $(DEVICE_PATH)/bluetooth/libbt_vndcfg.txt
 TARGET_SPECIFIC_CAMERA_PARAMETER_LIBRARY := libcamera_parameters_ext
 USE_DEVICE_SPECIFIC_CAMERA := true
 
-# QCOM hardware
-BOARD_USES_QCOM_HARDWARE := true
-
-# CM Hardware
+# CMHW
 BOARD_USES_CYANOGEN_HARDWARE := true
-BOARD_HARDWARE_CLASS += $(DEVICE_PATH)/cmhw
-
-# CNE and DPM
-TARGET_LDPRELOAD := libNimsWrap.so
-BOARD_USES_QCNE := true 
+BOARD_HARDWARE_CLASS += \
+    $(DEVICE_PATH)/cmhw \
+    hardware/cyanogen/cmhw
 
 # Display
 NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
@@ -144,6 +139,7 @@ TARGET_POWERHAL_VARIANT := qcom
 TARGET_SYSTEM_PROP := $(DEVICE_PATH)/system.prop
 
 # Qualcomm
+BOARD_USES_QCOM_HARDWARE := true
 BOARD_USES_QC_TIME_SERVICES := true
 
 # Recovery
