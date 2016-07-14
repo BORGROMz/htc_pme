@@ -79,6 +79,31 @@ ro.telephony.default_network=10
 telephony.lteOnGsmDevice=1
 ro.ril.def.preffered.network=10
 
+#T-Mobile
+ro.product.model=HTC 10
+ro.phone.min_match=10
+ro.ril.enable.dtm=0
+ro.ril.air.enabled=1
+ro.ril.enable.amr.wideband=1
+ro.ril.enable.sdr=0
+ro.ril.disable.cpc=1
+ro.ril.enable.isr=1
+ro.ril.radio.svn=1
+ro.ril.def.agps.feature=1
+ro.ril.def.agps.mode=1
+ro.ril.ps_handover=1
+ro.ril.lte3gpp=130
+ro.ril.ltefgi.rel9=3221225472
+ro.ril.enable.ganlite=0
+ro.ril.set.mtusize=1440
+ro.ril.fd.pre_r8_tout.scr_off=17000
+ro.ril.fd.pre_r8_tout.scr_on=0
+ro.ril.fd.r8_tout.scr_off=2500
+ro.ril.fd.r8_tout.scr_on=0
+ro.ril.enable.r8fd=1
+ro.ril.enable.pre_r8fd=1
+wifi.hs20.support=true
+
 # Timeservice
 persist.timed.enable=true
 # Wifi
