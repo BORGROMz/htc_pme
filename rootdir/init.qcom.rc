@@ -57,6 +57,32 @@ on init
 on fs
     mount_all fstab.qcom
 
+    #RIL+
+    #mount rfg_3
+    mkdir /firmware/wsd 0500 rfs rfs
+    wait /dev/block/bootdevice/by-name/rfg_3
+    mount vfat /dev/block/bootdevice/by-name/rfg_3 /firmware/wsd ro shortname=lower,uid=3012,gid=3012,dmask=277,fmask=377
+    #RIL-
+
+    # Mount radio image
+    mkdir /firmware/radio 0771 system system
+    wait /dev/block/bootdevice/by-name/radio
+    mount vfat /dev/block/bootdevice/by-name/radio /firmware/radio ro shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
+
+    # Mount adsp image
+    mkdir /firmware/adsp 0771 system system
+    wait /dev/block/bootdevice/by-name/adsp
+    mount vfat /dev/block/bootdevice/by-name/adsp /firmware/adsp ro shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
+
+    # Mount carrier partition
+    mkdir /carrier 0770 system carrier
+    wait /dev/block/bootdevice/by-name/carrier
+    mount ext4 /dev/block/bootdevice/by-name/carrier /carrier nosuid nodev noatime barrier=1,grpid
+    chown system carrier /carrier
+    chmod 0770 /carrier
+    # restorecon carrier partition.
+    restorecon_recursive /carrier
+
     # symlink firmware to /firmware/image
     wait /system/bin/sh
     class_start firmware-link
