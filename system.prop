@@ -52,7 +52,6 @@ ro.sf.lcd_density=640
 ro.frp.pst=/dev/block/bootdevice/by-name/frp
 
 # NITZ
-rild.libpath=/vendor/lib64/libril-qc-qmi-1.so
 persist.rild.nitz_plmn=
 persist.rild.nitz_long_ons_0=
 persist.rild.nitz_long_ons_1=
