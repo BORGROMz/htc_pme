@@ -35,14 +35,6 @@ ro.qualcomm.bt.hci_transport=smd
 # Camera
 camera2.portability.force_api=1
 
-# CNE
-persist.cne.feature=1
-
-# Data modules
-ro.use_data_netmgrd=true
-persist.data.netmgrd.qos.enable=true
-persist.data.mode=concurrent
-
 # Display
 #persist.hwc.mdpcomp.enable=true
 ro.opengles.version=196609
