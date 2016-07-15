@@ -140,7 +140,7 @@ TARGET_SYSTEM_PROP := $(DEVICE_PATH)/system.prop
 
 # Qualcomm
 BOARD_USES_QCOM_HARDWARE := true
-BOARD_USES_QC_TIME_SERVICES := true
+TARGET_PLATFORM_DEVICE_BASE := /devices/soc.0/
 
 # Recovery
 TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/rootdir/fstab.qcom
