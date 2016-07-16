@@ -516,6 +516,16 @@ service qcamerasvr /system/bin/mm-qcamera-daemon
     user camera
     group camera system inet input graphics
 
+service qcom-c_core-sh /system/bin/sh /init.qcom.class_core.sh
+    class core
+    user root
+    oneshot
+
+service qcom-c_main-sh /system/bin/sh /init.class_main.sh
+    class main
+    user root
+    oneshot
+
 service qcom-sh /system/bin/sh /init.qcom.sh
     class late_start
     user root
