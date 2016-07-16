@@ -553,6 +553,8 @@ vendor/lib64/libcneconn.so
 vendor/lib64/libcneqmiutils.so
 vendor/lib64/libconfigdb.so
 vendor/lib64/libconnctrl.so
+vendor/lib64/libhtcril_db.so
+vendor/lib64/liblqe.so
 vendor/lib64/libmdmdetect.so
 vendor/lib64/libnetmgr.so
 vendor/lib64/libqcmaputils.so
