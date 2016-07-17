@@ -91,6 +91,7 @@ on post-fs-data
 
     # Create directory for CNE
     mkdir /data/connectivity 0771 system system
+    chown system system /data/connectivity
 
     # Create directory for DASH client
     mkdir /data/misc/dash 0770 media audio
@@ -101,6 +102,11 @@ on post-fs-data
 
     # Create directory for DPM
     mkdir /data/dpm 0771 system system
+    chown system system /data/dpm
+
+    mkdir /data/dpm/fdMgr 0771 system system
+    chown system system /data/dpm/fdMgr
+
     mkdir /data/dpm/nsrm 0771 system system
 
     # Create directory for fingerprint
@@ -112,8 +118,9 @@ on post-fs-data
     # Create directory for hostapd
     mkdir /data/hostapd 0770 system wifi
 
-    # Create directory for IMS services
-    mkdir /data/shared 0755 system system
+    # Create directory for IMS
+    mkdir /data/shared 0755
+    chown system system /data/shared
 
     # Create directory for IPA
     mkdir /data/misc/ipa 0700 net_admin net_admin
@@ -165,6 +172,7 @@ on boot
     mkdir /dev/socket/qmux_audio 0770 media audio
     mkdir /dev/socket/qmux_bluetooth 0770 bluetooth bluetooth
     mkdir /dev/socket/qmux_gps 0770 gps gps
+    mkdir /dev/socket/qmux_nfc 0770 nfc nfc
     mkdir /dev/socket/qmux_radio 0770 radio radio
 
     # Create NETMGR daemon socket area
@@ -434,18 +442,18 @@ service msm_irqbalance /system/bin/msm_irqbalance -f /system/vendor/etc/msm_irqb
 
 service netmgrd /system/bin/netmgrd
     class main
+    group radio
 
-#Start up peripheral manager
-service per_mgr system/bin/pm-service
-    class core
+service per_mgr /system/bin/pm-service
+    class late_start
     user system
     group system net_raw
     ioprio rt 4
 
 service per_proxy /system/bin/pm-proxy
-    class core
+    class late_start
     user system
-    group system
+    group system net_raw
     disabled
 
 on property:init.svc.per_mgr=running
@@ -485,7 +493,7 @@ service qcom-sh /system/bin/sh /init.qcom.sh
 service qmuxd /system/bin/qmuxd
     class core
     user root
-    group radio audio bluetooth gps qcom_diag
+    group radio audio bluetooth gps nfc qcom_diag
 
 service qseecomd /system/bin/qseecomd
     class core
