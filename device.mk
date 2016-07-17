@@ -138,10 +138,7 @@ PRODUCT_PACKAGES += \
     init.recovery.qcom.rc \
     ueventd.qcom.rc \
     init.qcom.sh \
-    init.qcom.firmware_links.sh \
-    init.class_main.sh \
-    init.qcom.class_core.sh \
-    init.mdm.sh
+    init.qcom.firmware_links.sh
 
 # Input
 PRODUCT_COPY_FILES += \

@@ -57,32 +57,6 @@ on init
 on fs
     mount_all fstab.qcom
 
-    #RIL+
-    #mount rfg_3
-    mkdir /firmware/wsd 0500 rfs rfs
-    wait /dev/block/bootdevice/by-name/rfg_3
-    mount vfat /dev/block/bootdevice/by-name/rfg_3 /firmware/wsd ro shortname=lower,uid=3012,gid=3012,dmask=277,fmask=377
-    #RIL-
-
-    # Mount radio image
-    mkdir /firmware/radio 0771 system system
-    wait /dev/block/bootdevice/by-name/radio
-    mount vfat /dev/block/bootdevice/by-name/radio /firmware/radio ro shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
-
-    # Mount adsp image
-    mkdir /firmware/adsp 0771 system system
-    wait /dev/block/bootdevice/by-name/adsp
-    mount vfat /dev/block/bootdevice/by-name/adsp /firmware/adsp ro shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
-
-    # Mount carrier partition
-    mkdir /carrier 0770 system carrier
-    wait /dev/block/bootdevice/by-name/carrier
-    mount ext4 /dev/block/bootdevice/by-name/carrier /carrier nosuid nodev noatime barrier=1,grpid
-    chown system carrier /carrier
-    chmod 0770 /carrier
-    # restorecon carrier partition.
-    restorecon_recursive /carrier
-
     # symlink firmware to /firmware/image
     wait /system/bin/sh
     class_start firmware-link
@@ -117,7 +91,6 @@ on post-fs-data
 
     # Create directory for CNE
     mkdir /data/connectivity 0771 system system
-    chown system system /data/connectivity
 
     # Create directory for DASH client
     mkdir /data/misc/dash 0770 media audio
@@ -174,14 +147,6 @@ on post-fs-data
     mkdir /data/misc/perfd 2755 root system
     mkdir /data/system/perfd 2770 root system
 
-    # File flags for prebuilt ril db file
-    write /data/misc/radio/prebuilt_db_support 1
-    chown radio radio /data/misc/radio/prebuilt_db_support
-    chmod 0400 /data/misc/radio/prebuilt_db_support
-    write /data/misc/radio/db_check_done 0
-    chown radio radio /data/misc/radio/db_check_done
-    chmod 0660 /data/misc/radio/db_check_done
-
     # Create directory for time-services
     mkdir /data/time/ 0700 system system
 
@@ -196,15 +161,11 @@ on early-boot
     write /sys/kernel/boot_slpi/boot 1
 
 on boot
-    #Create QMUX deamon socket area
-    mkdir /dev/socket/qmux_radio 0770 radio radio
-    chmod 2770 /dev/socket/qmux_radio
+    # Create QMUX deamon socket area
     mkdir /dev/socket/qmux_audio 0770 media audio
-    chmod 2770 /dev/socket/qmux_audio
     mkdir /dev/socket/qmux_bluetooth 0770 bluetooth bluetooth
-    chmod 2770 /dev/socket/qmux_bluetooth
     mkdir /dev/socket/qmux_gps 0770 gps gps
-    chmod 2770 /dev/socket/qmux_gps
+    mkdir /dev/socket/qmux_radio 0770 radio radio
 
     # Create NETMGR daemon socket area
     mkdir /dev/socket/netmgr 0750 radio radio
@@ -516,16 +477,6 @@ service qcamerasvr /system/bin/mm-qcamera-daemon
     user camera
     group camera system inet input graphics
 
-service qcom-c_core-sh /system/bin/sh /init.qcom.class_core.sh
-    class core
-    user root
-    oneshot
-
-service qcom-c_main-sh /system/bin/sh /init.class_main.sh
-    class main
-    user root
-    oneshot
-
 service qcom-sh /system/bin/sh /init.qcom.sh
     class late_start
     user root
@@ -662,14 +613,6 @@ service hostapd /system/bin/hostapd -dd /data/hostapd/hostapd.conf
     oneshot
     disabled
 
-service_redefine ril-daemon /system/bin/rild
-    class main
-    socket rild stream 660 root radio
-    socket sap_uim_socket1 stream 660 bluetooth bluetooth
-    socket rild-debug stream 660 radio system
-    user root
-    group radio cache inet misc audio sdcard_r sdcard_rw qcom_diag diag log net_raw
-	
 # Firmware linking to /firmware/image
 service fwnk-adsp  /system/bin/sh /init.qcom.firmware_links.sh /firmware/adsp /firmware/image "adsp*" adsp
     class firmware-link
