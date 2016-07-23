@@ -33,7 +33,7 @@ include $(CLEAR_VARS)
 
 ADSP_IMAGES := \
     adsp.b00 adsp.b01 adsp.b02 adsp.b03 adsp.b04 adsp.b05 adsp.b06 adsp.b07 \
-    adsp.b08 adsp.b09 adsp.b10 adsp.b11 adsp.mdt adpver.cfg
+    adsp.b08 adsp.b09 adsp.b10 adsp.b11 adsp.mdt adspver.cfg
 
 ADSP_SYMLINKS := $(addprefix $(TARGET_OUT_VENDOR)/firmware/,$(notdir $(ADSP_IMAGES)))
 $(ADSP_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
@@ -108,5 +108,7 @@ $(VENUS_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
 	$(hide) ln -sf /firmware/venus/$(notdir $@) $@
 
 ALL_DEFAULT_INSTALLED_MODULES += $(VENUS_SYMLINKS)
+
+include device/htc/pme/tftp.mk
 
 endif

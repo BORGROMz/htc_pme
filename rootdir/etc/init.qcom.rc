@@ -57,17 +57,109 @@ on init
 on fs
     mount_all fstab.qcom
 
-    # symlink firmware to /firmware/image
-    wait /system/bin/sh
-    class_start firmware-link
-    wait /firmware/image/.adsp_done
-    wait /firmware/image/.radio_done
-    wait /firmware/image/.sec_done
-    wait /firmware/image/.venus_done
-    setprop ro.boot.firmware.cpe 1
+    mkdir /firmware 0771 system system
+    mkdir /firmware/image 0771 system system
+
+    mkdir /persist 0771 system system
+    wait /dev/block/bootdevice/by-name/persist
+    mount ext4 /dev/block/bootdevice/by-name/persist /persist nosuid nodev barrier=1,errors=continue
 
     # HTC feature: Support multiple firmware image mount points
     write /sys/module/firmware_class/parameters/fw_path /firmware/adsp,/firmware/radio,/firmware/slpi,/firmware/venus,/firmware/wsd,/vendor/firmware
+
+    # Mount cradio image
+    mkdir /firmware/cradio 0771 system system
+    wait /dev/block/bootdevice/by-name/cradio
+    mount vfat /dev/block/bootdevice/by-name/cradio /firmware/cradio ro shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
+
+wait /dev/block/bootdevice/by-name/cache
+    e2fsck emmc@cache
+    mount ext4 /dev/block/bootdevice/by-name/cache /cache nosuid nodev barrier=1
+
+    wait /dev/block/bootdevice/by-name/persist
+    e2fsck emmc@persist
+    mount ext4 /dev/block/bootdevice/by-name/persist /persist nosuid nodev barrier=1,errors=panic
+    restorecon_recursive_force /persist
+    mkdir /persist/data 0700 system system
+
+    wait /dev/block/bootdevice/by-name/dsp
+    e2fsck emmc@dsp
+    mount ext4 /dev/block/bootdevice/by-name/dsp /dsp nosuid nodev barrier=1,errors=panic
+    restorecon_recursive /dsp
+
+    mkdir /devlog 0700 root root
+    wait /dev/block/bootdevice/by-name/devlog
+    e2fsck emmc@devlog
+    mount ext4 emmc@devlog /devlog nosuid nodev barrier=1,errors=continue
+
+    mkdir /fataldevlog 0700 root root
+    wait /dev/block/bootdevice/by-name/fataldevlog
+    e2fsck emmc@fataldevlog
+    mount ext4 emmc@fataldevlog /fataldevlog nosuid nodev barrier=1,errors=continue
+
+    # mount cota partition
+    mkdir /cota 0771 root cw_access
+    wait /dev/block/bootdevice/by-name/cota
+    e2fsck emmc@cota
+    mount ext4 /dev/block/bootdevice/by-name/cota /cota nosuid nodev noatime barrier=1,grpid
+
+    # mount preload data partition
+    mkdir /preload 0771 system system
+    wait /dev/block/bootdevice/by-name/apppreload
+    e2fsck emmc@apppreload
+    mount ext4 /dev/block/bootdevice/by-name/apppreload /preload nosuid nodev noatime barrier=1,grpid
+
+# Mount Venus fw ++
+    mkdir /firmware/image 0771 system system
+    mkdir /firmware/venus 0771 system system
+    wait /dev/block/bootdevice/by-name/venus
+    mount vfat /dev/block/bootdevice/by-name/venus /firmware/venus ro shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
+
+    wait /system/bin/sh
+    class_start firmware-venus-link
+    wait /firmware/image/.venus_done
+#Venus FW end
+
+    #RIL+
+    #mount rfg_3
+    mkdir /firmware/wsd 0500 rfs rfs
+    wait /dev/block/bootdevice/by-name/rfg_3
+    mount vfat /dev/block/bootdevice/by-name/rfg_3 /firmware/wsd ro shortname=lower,uid=3012,gid=3012,dmask=277,fmask=377
+    #RIL-
+
+    # Mount radio image
+    mkdir /firmware/radio 0771 system system
+    wait /dev/block/bootdevice/by-name/radio
+    mount vfat /dev/block/bootdevice/by-name/radio /firmware/radio ro shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
+
+    # Mount adsp image
+    mkdir /firmware/adsp 0771 system system
+    wait /dev/block/bootdevice/by-name/adsp
+    mount vfat /dev/block/bootdevice/by-name/adsp /firmware/adsp ro shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
+
+    mkdir /devlog 0700 root root
+    wait /dev/block/bootdevice/by-name/devlog
+    e2fsck /dev/block/bootdevice/by-name/devlog
+    mount ext4 /dev/block/bootdevice/by-name/devlog /devlog nosuid nodev barrier=1,errors=continue
+
+    mkdir /fataldevlog 0700 root root
+    wait /dev/block/bootdevice/by-name/fataldevlog
+    e2fsck /dev/block/bootdevice/by-name/fataldevlog
+    mount ext4 /dev/block/bootdevice/by-name/fataldevlog /fataldevlog nosuid nodev barrier=1,errors=continue
+
+service fwnk-adsp  /system/bin/sh /init.qcom.firmware_links.sh /firmware/adsp /firmware/image "adsp*" adsp
+    class firmware-link
+    oneshot
+
+service fwnk-radio /system/bin/sh /init.qcom.firmware_links.sh /firmware/radio /firmware/image "modem* mba* radiover* version* qdsp6m* msadp*" radio
+    class firmware-link
+    oneshot
+
+#Mount Venus FW
+service fwnk-venus /system/bin/sh /init.qcom.firmware_links.sh /firmware/venus /firmware/image "venus*" venus
+    class firmware-venus-link
+    oneshot
+#Venus FW end
 
 on post-fs-data
     # Create directory for tombstone
@@ -169,11 +261,14 @@ on early-boot
 
 on boot
     # Create QMUX deamon socket area
-    mkdir /dev/socket/qmux_audio 0770 media audio
-    mkdir /dev/socket/qmux_bluetooth 0770 bluetooth bluetooth
-    mkdir /dev/socket/qmux_gps 0770 gps gps
-    mkdir /dev/socket/qmux_nfc 0770 nfc nfc
     mkdir /dev/socket/qmux_radio 0770 radio radio
+    chmod 2770 /dev/socket/qmux_radio
+    mkdir /dev/socket/qmux_audio 0770 media audio
+    chmod 2770 /dev/socket/qmux_audio
+    mkdir /dev/socket/qmux_bluetooth 0770 bluetooth bluetooth
+    chmod 2770 /dev/socket/qmux_bluetooth
+    mkdir /dev/socket/qmux_gps 0770 gps gps
+    chmod 2770 /dev/socket/qmux_gps
 
     # Create NETMGR daemon socket area
     mkdir /dev/socket/netmgr 0750 radio radio
@@ -362,6 +457,13 @@ on boot
 
 # Services begin here
 
+# +SSD_RIL: TMO trustonic daemon
+service tsdaemon /system/bin/tsdaemon
+    class main
+    user radio
+    group system
+# -SSD_RIL: TMO trustonic daemon
+
 service adsprpcd /system/bin/adsprpcd
     class main
     user media
@@ -489,6 +591,25 @@ service qcom-sh /system/bin/sh /init.qcom.sh
     class late_start
     user root
     oneshot
+
+service qcom-c_core-sh /system/bin/sh /init.qcom.class_core.sh
+    class core
+    user root
+    oneshot
+
+service qcom-c_main-sh /system/bin/sh /init.class_main.sh
+    class main
+    user root
+    oneshot
+
+service mdm_launcher /system/bin/sh init.mdm.sh
+     class core
+     oneshot
+
+service mdm_helper /system/bin/mdm_helper
+     class core
+     group root system
+     disabled
 
 service qmuxd /system/bin/qmuxd
     class core
@@ -641,6 +762,38 @@ service fwnk-sec  /system/bin/sh /init.qcom.firmware_links.sh /system/etc/firmwa
 service fwnk-venus /system/bin/sh /init.qcom.firmware_links.sh /firmware/venus /firmware/image "venus*" venus
     class firmware-link
     oneshot
+
+service_redefine ril-daemon /system/bin/rild
+    class main
+    socket rild stream 660 root radio
+    socket sap_uim_socket1 stream 660 bluetooth bluetooth
+    socket rild-debug stream 660 radio system
+    user root
+    group radio cache inet misc audio sdcard_r sdcard_rw qcom_diag diag log net_raw
+
+service usb_uicc_enable /system/bin/sh /system/etc/init.qcom.uicc.sh
+    class late_start
+    user root
+    disabled
+    oneshot
+
+service usb_uicc_daemon /system/bin/usb_uicc_client
+    class main
+    user system
+    group system log net_raw
+    oneshot
+
+on property:sys.usb_uicc.enabled=1
+    start usb_uicc_enable
+
+on property:sys.usb_uicc.enabled=0
+    start usb_uicc_enable
+
+service profiler_daemon /system/bin/profiler_daemon
+    class late_start
+    user root
+    group root
+    disabled
 
 # Triggers start here
 on class_start:late_start

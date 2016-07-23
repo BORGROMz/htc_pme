@@ -37,3 +37,5 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
     PRODUCT_NAME="pmewl_00531" \
     BUILD_FINGERPRINT="htc/pmewl_00531/htc_pmewl:6.0.1/MMB29M/770927.1:user/release-keys" \
     PRIVATE_BUILD_DESC="1.81.531.1 8.0_g CL770927 release-keys"
+
+TARGET_VENDOR := htc

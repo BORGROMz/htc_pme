@@ -87,6 +87,10 @@ COMMON_GLOBAL_CFLAGS += \
     -DBOARD_CHARGING_CMDLINE_NAME='"androidboot.mode"' \
     -DBOARD_CHARGING_CMDLINE_VALUE='"chargerlogo"'
 
+# CNE and DPM
+TARGET_LDPRELOAD := libNimsWrap.so
+BOARD_USES_QCNE := true
+
 # CM Hardware
 BOARD_HARDWARE_CLASS := $(COMMON_PATH)/cmhw
 
@@ -126,7 +130,11 @@ TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
 
 # Init
-TARGET_PLATFORM_DEVICE_BASE := /devices/soc.0/
+TARGET_PLATFORM_DEVICE_BASE := /devices/soc/
+
+# Keymaster
+TARGET_PROVIDES_KEYMASTER := true
+
 # Keymaster
 TARGET_PROVIDES_KEYMASTER := true
 
@@ -148,7 +156,7 @@ BOARD_USES_QCOM_HARDWARE := true
 BOARD_USES_QC_TIME_SERVICES := true
 
 # Recovery
-TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/rootdir/fstab.qcom
+TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/rootdir/etc/fstab.qcom
 
 # RIL
 BOARD_PROVIDES_LIBRIL := true

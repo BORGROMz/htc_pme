@@ -138,7 +138,10 @@ PRODUCT_PACKAGES += \
     init.recovery.qcom.rc \
     ueventd.qcom.rc \
     init.qcom.sh \
-    init.qcom.firmware_links.sh
+    init.qcom.firmware_links.sh \
+    init.qcom.class_core.sh \
+    init.class_main.sh \
+    init.mdm.sh
 
 # Input
 PRODUCT_COPY_FILES += \
@@ -228,12 +231,10 @@ PRODUCT_PACKAGES += \
     libtinyxml
 
 # RIL
-PRODUCT_PROPERTY_OVERRIDES += \
-    rild.libpath=/vendor/lib64/libril-qc-qmi-1.so
-
 PRODUCT_PACKAGES += \
     libcnefeatureconfig \
-    librmnetctl
+    librmnetctl \
+    libxml2
 
 # Thermal
 PRODUCT_COPY_FILES += \
