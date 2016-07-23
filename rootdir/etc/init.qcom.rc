@@ -97,18 +97,6 @@ wait /dev/block/bootdevice/by-name/cache
     e2fsck emmc@fataldevlog
     mount ext4 emmc@fataldevlog /fataldevlog nosuid nodev barrier=1,errors=continue
 
-    # mount cota partition
-    mkdir /cota 0771 root cw_access
-    wait /dev/block/bootdevice/by-name/cota
-    e2fsck emmc@cota
-    mount ext4 /dev/block/bootdevice/by-name/cota /cota nosuid nodev noatime barrier=1,grpid
-
-    # mount preload data partition
-    mkdir /preload 0771 system system
-    wait /dev/block/bootdevice/by-name/apppreload
-    e2fsck emmc@apppreload
-    mount ext4 /dev/block/bootdevice/by-name/apppreload /preload nosuid nodev noatime barrier=1,grpid
-
 # Mount Venus fw ++
     mkdir /firmware/image 0771 system system
     mkdir /firmware/venus 0771 system system
