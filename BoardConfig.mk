@@ -135,9 +135,6 @@ TARGET_PLATFORM_DEVICE_BASE := /devices/soc/
 # Keymaster
 TARGET_PROVIDES_KEYMASTER := true
 
-# Keymaster
-TARGET_PROVIDES_KEYMASTER := true
-
 # Lights
 TARGET_PROVIDES_LIBLIGHT := true
 
