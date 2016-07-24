@@ -141,7 +141,8 @@ PRODUCT_PACKAGES += \
     init.qcom.firmware_links.sh \
     init.qcom.class_core.sh \
     init.class_main.sh \
-    init.mdm.sh
+    init.mdm.sh \
+    init.qcom.uicc.sh
 
 # Input
 PRODUCT_COPY_FILES += \

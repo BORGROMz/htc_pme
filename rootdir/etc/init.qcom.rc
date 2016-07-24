@@ -64,15 +64,7 @@ on fs
     wait /dev/block/bootdevice/by-name/persist
     mount ext4 /dev/block/bootdevice/by-name/persist /persist nosuid nodev barrier=1,errors=continue
 
-    # HTC feature: Support multiple firmware image mount points
-    write /sys/module/firmware_class/parameters/fw_path /firmware/adsp,/firmware/radio,/firmware/slpi,/firmware/venus,/firmware/wsd,/vendor/firmware
-
-    # Mount cradio image
-    mkdir /firmware/cradio 0771 system system
-    wait /dev/block/bootdevice/by-name/cradio
-    mount vfat /dev/block/bootdevice/by-name/cradio /firmware/cradio ro shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
-
-wait /dev/block/bootdevice/by-name/cache
+    wait /dev/block/bootdevice/by-name/cache
     e2fsck emmc@cache
     mount ext4 /dev/block/bootdevice/by-name/cache /cache nosuid nodev barrier=1
 
@@ -86,16 +78,6 @@ wait /dev/block/bootdevice/by-name/cache
     e2fsck emmc@dsp
     mount ext4 /dev/block/bootdevice/by-name/dsp /dsp nosuid nodev barrier=1,errors=panic
     restorecon_recursive /dsp
-
-    mkdir /devlog 0700 root root
-    wait /dev/block/bootdevice/by-name/devlog
-    e2fsck emmc@devlog
-    mount ext4 emmc@devlog /devlog nosuid nodev barrier=1,errors=continue
-
-    mkdir /fataldevlog 0700 root root
-    wait /dev/block/bootdevice/by-name/fataldevlog
-    e2fsck emmc@fataldevlog
-    mount ext4 emmc@fataldevlog /fataldevlog nosuid nodev barrier=1,errors=continue
 
 # Mount Venus fw ++
     mkdir /firmware/image 0771 system system
@@ -135,27 +117,12 @@ wait /dev/block/bootdevice/by-name/cache
     e2fsck /dev/block/bootdevice/by-name/fataldevlog
     mount ext4 /dev/block/bootdevice/by-name/fataldevlog /fataldevlog nosuid nodev barrier=1,errors=continue
 
-service fwnk-adsp  /system/bin/sh /init.qcom.firmware_links.sh /firmware/adsp /firmware/image "adsp*" adsp
-    class firmware-link
-    oneshot
-
-service fwnk-radio /system/bin/sh /init.qcom.firmware_links.sh /firmware/radio /firmware/image "modem* mba* radiover* version* qdsp6m* msadp*" radio
-    class firmware-link
-    oneshot
-
-#Mount Venus FW
-service fwnk-venus /system/bin/sh /init.qcom.firmware_links.sh /firmware/venus /firmware/image "venus*" venus
-    class firmware-venus-link
-    oneshot
-#Venus FW end
-
 on post-fs-data
     # Create directory for tombstone
     mkdir /data/tombstones 0771 system system
     mkdir /tombstones/modem 0771 system system
     mkdir /tombstones/lpass 0771 system system
     mkdir /tombstones/dsps 0771 system system
-
     mkdir /persist/data/sfs 0700 system system
     mkdir /persist/data/tz 0700 system system
     mkdir /persist/tee 0700 system system
@@ -186,7 +153,6 @@ on post-fs-data
 
     mkdir /data/dpm/fdMgr 0771 system system
     chown system system /data/dpm/fdMgr
-
     mkdir /data/dpm/nsrm 0771 system system
 
     # Create directory for fingerprint
@@ -590,7 +556,7 @@ service qcom-c_main-sh /system/bin/sh /init.class_main.sh
     user root
     oneshot
 
-service mdm_launcher /system/bin/sh init.mdm.sh
+service mdm_launcher /system/bin/sh /init.mdm.sh
      class core
      oneshot
 
@@ -751,6 +717,9 @@ service fwnk-venus /system/bin/sh /init.qcom.firmware_links.sh /firmware/venus /
     class firmware-link
     oneshot
 
+# HTC feature: Support multiple firmware image mount points
+    write /sys/module/firmware_class/parameters/fw_path /firmware/adsp,/firmware/radio,/firmware/slpi,/firmware/venus,/firmware/wsd,/vendor/firmware
+
 service_redefine ril-daemon /system/bin/rild
     class main
     socket rild stream 660 root radio
@@ -759,7 +728,7 @@ service_redefine ril-daemon /system/bin/rild
     user root
     group radio cache inet misc audio sdcard_r sdcard_rw qcom_diag diag log net_raw
 
-service usb_uicc_enable /system/bin/sh /system/etc/init.qcom.uicc.sh
+service usb_uicc_enable /system/bin/sh /init.qcom.uicc.sh
     class late_start
     user root
     disabled
